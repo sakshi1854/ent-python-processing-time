@@ -1,0 +1,30 @@
+name: SAP CPI Python Script Runner
+
+on:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run SAP CPI script
+        env:
+          SAP_USERNAME: ${{ secrets.SAP_USERNAME }}
+          SAP_PASSWORD: ${{ secrets.SAP_PASSWORD }}
+          SAP_BASE_URL: ${{ secrets.SAP_BASE_URL }}
+          IFLOW_URL: ${{ secrets.IFLOW_URL }}
+          IFLOW_USERNAME: ${{ secrets.IFLOW_USERNAME }}
+          IFLOW_PASSWORD: ${{ secrets.IFLOW_PASSWORD }}
+        run: python .github/workflows/fetch_processing_times.py
